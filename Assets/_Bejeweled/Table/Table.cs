@@ -305,13 +305,13 @@ namespace Bejeweled
                     // find matching types to the left
                     _type = FindMatchingTypeInDirection(new Vector2Int(i, j), TileDirection.Left);
 
-                    if (_type != null && _tileTypeList.IndexOf(_type) == -1)
+                    if (_type != null && !_tileTypeList.Contains(_type))
                         _tileTypeList.Add(_type);
 
                     // find matching types up
                     _type = FindMatchingTypeInDirection(new Vector2Int(i, j), TileDirection.Up);
 
-                    if (_type != null && _tileTypeList.IndexOf(_type) == -1)
+                    if (_type != null && !_tileTypeList.Contains(_type))
                         _tileTypeList.Add(_type);
 
                     _tileTypeList = tileFactory.FindTypesDifferentThan(_tileTypeList);
@@ -484,7 +484,7 @@ namespace Bejeweled
 
                 // if there is a matching type to that direction
                 // and it is not in the matching type list
-                if (_matchingType != null && _tileTypeList.IndexOf(_matchingType) != -1)
+                if (_matchingType != null && !_tileTypeList.Contains(_matchingType))
                 {
                     // add it to the list
                     _tileTypeList.Add(_matchingType);
