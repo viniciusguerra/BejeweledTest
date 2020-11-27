@@ -63,7 +63,7 @@ namespace Bejeweled
 
             Tile[] matchingTiles;
 
-            TileDirection switchDirection = tileA.Position.x == tileB.Position.x ? TileDirection.Horizontal : TileDirection.Vertical;
+            TileDirection switchDirection = tileA.Position.x != tileB.Position.x ? TileDirection.Horizontal : TileDirection.Vertical;
 
             bool matchedHorizontal = FindMatchInRow(tileA, TileDirection.Horizontal, out matchingTiles);
 
@@ -74,10 +74,10 @@ namespace Bejeweled
 
             if (switchDirection == TileDirection.Vertical)
             {
-                matchedHorizontal |= FindMatchInRow(tileB, TileDirection.Horizontal, out matchingTiles);
-
-                if (matchedHorizontal)
+                if (FindMatchInRow(tileB, TileDirection.Horizontal, out matchingTiles))
                 {
+                    matchedHorizontal = true;
+
                     yield return ClearTiles(matchingTiles, TileDirection.Horizontal);
                 }
             }
@@ -91,10 +91,10 @@ namespace Bejeweled
 
             if (switchDirection == TileDirection.Vertical)
             {
-                matchedVertical |= FindMatchInRow(tileB, TileDirection.Vertical, out matchingTiles);
-
-                if (matchedVertical)
+                if (FindMatchInRow(tileB, TileDirection.Vertical, out matchingTiles))
                 {
+                    matchedVertical = true;
+
                     yield return ClearTiles(matchingTiles, TileDirection.Vertical);
                 }
             }
@@ -107,14 +107,14 @@ namespace Bejeweled
                     new Vector2Int[] { selectedPosition, otherTilePosition },
                     switchAnimationTime
                 );
-
-                tileA.ToggleSelect(false);
-                tileB.ToggleSelect(false);
             }
 
             // unlock input to allow interaction
             tileA.LockedInput = false;
             tileB.LockedInput = false;
+
+            tileA.ToggleSelect(false);
+            tileB.ToggleSelect(false);
         }
 
         float _counter;
