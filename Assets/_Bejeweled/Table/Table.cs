@@ -34,7 +34,8 @@ namespace Bejeweled
 
         public Tile[,] TileMatrix;
 
-        public event EventHandler<TileSelectedArgs> OnTileSelected;
+        public event EventHandler<TileSelectedArgs> OnTileSelected, OnTileDeselected;
+        public event EventHandler<TileMatchArgs> OnTileMatch;
 
         Tile _tile, _tileA, _tileB;
         Tile[] _matchingTiles;
@@ -43,6 +44,11 @@ namespace Bejeweled
         public void SelectedTile(Tile tile)
         {
             OnTileSelected?.Invoke(this, new TileSelectedArgs(tile));
+        }
+
+        public void DeselectedTile(Tile tile)
+        {
+            OnTileDeselected?.Invoke(this, new TileSelectedArgs(tile));
         }
 
         public void SwitchTiles(Tile tileA, Tile tileB)
@@ -68,6 +74,7 @@ namespace Bejeweled
             bool matchedAnyTime = false;
             bool matched;
             TileMatch[] tileMatchArray;
+            int comboCount = 0;
 
             do
             {
@@ -81,7 +88,11 @@ namespace Bejeweled
                 {
                     foreach (var match in tileMatchArray)
                     {
+                        comboCount++;
+
                         yield return ClearTiles(match);
+
+                        OnTileMatch?.Invoke(this, new TileMatchArgs(match, comboCount));
                     }                    
                 }
 
@@ -238,6 +249,18 @@ namespace Bejeweled
             public TileSelectedArgs(Tile tile)
             {
                 this.Tile = tile;
+            }
+        }
+
+        public class TileMatchArgs : EventArgs
+        {
+            public readonly TileMatch TileMatch;
+            public readonly int Combo;
+
+            public TileMatchArgs(TileMatch tileMatch, int combo)
+            {
+                TileMatch = tileMatch;
+                Combo = combo;
             }
         }
     }

@@ -53,6 +53,8 @@ namespace Bejeweled
                 if (otherTile == null)
                 {
                     tile.ToggleSelect(false);
+
+                    table.DeselectedTile(tile);
                 }
                 else
                 {
@@ -66,6 +68,8 @@ namespace Bejeweled
             if(!dragged)
             {
                 tile.ToggleSelect(false);
+
+                table.DeselectedTile(tile);
             }
         }
 
@@ -79,6 +83,8 @@ namespace Bejeweled
             if (selectedNeighbour != null)
             {
                 table.SwitchTiles(selectedNeighbour, tile);
+
+                table.DeselectedTile(tile);
             }
             else
             {
