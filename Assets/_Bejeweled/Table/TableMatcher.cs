@@ -7,7 +7,7 @@ namespace Bejeweled
 {
     public class TableMatcher : MonoBehaviour
     {
-        
+
 
         [SerializeField]
         private Table table;
@@ -22,17 +22,36 @@ namespace Bejeweled
         private int _matchingTypeIndex;
         private Tile _tileA, _tileB;
 
-        public bool CheckForMatches(Tile tileA, Tile tileB, out Tile[] matchingTiles)
+        public TileMatch[] CheckForMatches()
         {
-            return FindMatchesInPosition(tileA, out matchingTiles) || FindMatchesInPosition(tileB, out matchingTiles);
+            List<TileMatch> tileMatchList = new List<TileMatch>();
+
+            for (int i = 0; i < table.Rows; i++)
+            {
+                FindMatchesInPosition(i, tileMatchList);
+            }
+
+            return tileMatchList.ToArray();
         }
 
-        public bool FindMatchesInPosition(Tile tile, out Tile[] matchingTiles)
+        public void FindMatchesInPosition(int row, List<TileMatch> tileMatchList)
         {
-            return FindMatchInRow(tile, TileDirection.Horizontal, out matchingTiles) || FindMatchInRow(tile, TileDirection.Vertical, out matchingTiles);
+            TileMatch match = FindMatchInRow(row, TileDirection.Horizontal);
+
+            if (match != null)
+            {
+                tileMatchList.Add(match);
+            }
+
+            match = FindMatchInRow(row, TileDirection.Vertical);
+
+            if (match != null)
+            {
+                tileMatchList.Add(match);
+            }
         }
 
-        private bool FindMatchInRow(Tile rowTile, TileDirection direction, out Tile[] matchingTiles)
+        private TileMatch FindMatchInRow(int row, TileDirection direction)
         {
             int consecutive = 0;
             bool match = false;
@@ -41,8 +60,8 @@ namespace Bejeweled
 
             for (int i = 1; i < table.Rows; i++)
             {
-                _tileA = direction == TileDirection.Horizontal ? table.TileMatrix[i - 1, rowTile.Position.y] : table.TileMatrix[rowTile.Position.x, i - 1];
-                _tileB = direction == TileDirection.Horizontal ? table.TileMatrix[i, rowTile.Position.y] : table.TileMatrix[rowTile.Position.x, i];
+                _tileA = direction == TileDirection.Horizontal ? table.TileMatrix[i - 1, row] : table.TileMatrix[row, i - 1];
+                _tileB = direction == TileDirection.Horizontal ? table.TileMatrix[i, row] : table.TileMatrix[row, i];
 
                 if (_tileA.Equals(_tileB))
                 {
@@ -75,9 +94,7 @@ namespace Bejeweled
                 }
             }
 
-            matchingTiles = _tileList.ToArray();
-
-            return match;
+            return match ? new TileMatch(direction, _tileList.ToArray()) : null;
         }
 
         public List<TileType> FindMatchingTypesForPosition(Vector2Int tablePosition)

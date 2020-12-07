@@ -67,16 +67,22 @@ namespace Bejeweled
 
             bool matchedAnyTime = false;
             bool matched;
+            TileMatch[] tileMatchArray;
 
             do
             {
-                matched = tableMatcher.CheckForMatches(tileA, tileB, out _matchingTiles);
+                tileMatchArray = tableMatcher.CheckForMatches();
+
+                matched = tileMatchArray.Length > 0;
 
                 matchedAnyTime |= matched;
 
                 if (matched)
                 {
-                    yield return ClearTiles(_matchingTiles);
+                    foreach (var match in tileMatchArray)
+                    {
+                        yield return ClearTiles(match);
+                    }                    
                 }
 
             } while (matched);
@@ -132,11 +138,11 @@ namespace Bejeweled
             TileMatrix[positionB.x, positionB.y] = _tileA;
         }
 
-        public IEnumerator ClearTiles(Tile[] clearedTiles)
+        public IEnumerator ClearTiles(TileMatch tileMatch)
         {
             List<Vector2Int> positionList = new List<Vector2Int>();
 
-            foreach (var tile in clearedTiles)
+            foreach (var tile in tileMatch.MatchingTileArray)
             {
                 positionList.Add(tile.Position);
             }
@@ -144,17 +150,15 @@ namespace Bejeweled
             List<Tile> tileToDropList = new List<Tile>();
             List<Vector2Int> targetPositionList = new List<Vector2Int>();
 
-            TileDirection direction = positionList[0].x == positionList[1].x ? TileDirection.Vertical : TileDirection.Horizontal;
-
             // drop tiles in all x columns
-            if (direction == TileDirection.Horizontal)
+            if (tileMatch.Direction == TileDirection.Horizontal)
             {
                 FindTilesToDropInRow(positionList, tileToDropList, targetPositionList);
             }
             // find lowest tile and drop in one column to its position
             else
             {
-                FindTilesToDropInColumn(clearedTiles, tileToDropList, targetPositionList);
+                FindTilesToDropInColumn(tileMatch.MatchingTileArray, tileToDropList, targetPositionList);
             }
 
             yield return tableAnimator.AnimateTiles(tileToDropList.ToArray(), targetPositionList.ToArray());
