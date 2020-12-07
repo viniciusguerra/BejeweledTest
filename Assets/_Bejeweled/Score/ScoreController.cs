@@ -40,7 +40,7 @@ namespace Bejeweled
 
             Debug.Log($"{SCORECONTROLLER_DEBUG_PREFIX} Scored {difference}, Combo: {e.Combo}, Current Score: {score}");
 
-            OnScoreUpdated?.Invoke(this, new ScoreUpdateArgs(difference, e.Combo, score));
+            OnScoreUpdated?.Invoke(this, new ScoreUpdateArgs(difference, e.Combo, score, e.TileMatch));
         }
 
         public class ScoreUpdateArgs : EventArgs
@@ -48,12 +48,14 @@ namespace Bejeweled
             public readonly int ScoreDifference;
             public readonly int ComboCount;
             public readonly int CurrentScore;
+            public readonly TileMatch TileMatch;
 
-            public ScoreUpdateArgs(int scoreDifference, int comboCount, int currentScore)
+            public ScoreUpdateArgs(int scoreDifference, int comboCount, int currentScore, TileMatch tileMatch)
             {
                 ScoreDifference = scoreDifference;
                 ComboCount = comboCount;
                 CurrentScore = currentScore;
+                TileMatch = tileMatch;
             }
         }
     }

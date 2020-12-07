@@ -94,7 +94,19 @@ namespace Bejeweled
                 }
             }
 
-            return match ? new TileMatch(direction, _tileList.ToArray()) : null;
+            if(match)
+            {
+                // position of the match is position of the middle cleared Tile
+                int middleIndex = Mathf.CeilToInt(_tileList.Count / 2);
+
+                Vector3 position = _tileList[middleIndex].transform.position;
+
+                return new TileMatch(direction, _tileList.ToArray(), position);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public List<TileType> FindMatchingTypesForPosition(Vector2Int tablePosition)
