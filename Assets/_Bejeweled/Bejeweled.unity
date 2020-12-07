@@ -429,6 +429,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1463615647}
   - component: {fileID: 1463615646}
+  - component: {fileID: 1463615651}
+  - component: {fileID: 1463615650}
+  - component: {fileID: 1463615649}
+  - component: {fileID: 1463615648}
   m_Layer: 0
   m_Name: Table
   m_TagString: Untagged
@@ -448,20 +452,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1076b30dc03adbb44a409b8f183bc441, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileFactory:
-    poolController: {fileID: 1846186461}
-    tilePrefab: {fileID: 1814703554095226747, guid: 5153bf819a0403343b6ada66ce0fd3d4, type: 3}
-    gemTypeList: []
-  poolController: {fileID: 1846186461}
-  gemPoolArray:
-  - {fileID: 1270056864}
-  - {fileID: 1192575259}
-  - {fileID: 553755914}
-  - {fileID: 964437311}
-  - {fileID: 164168745}
+  tableBuilder: {fileID: 1463615651}
+  tableAnimator: {fileID: 1463615648}
+  tableMatcher: {fileID: 1463615650}
+  tableNavigator: {fileID: 1463615649}
   rows: 8
   tileDistance: 6
-  switchAnimationTime: 0.333
 --- !u!4 &1463615647
 Transform:
   m_ObjectHideFlags: 0
@@ -476,6 +472,73 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1463615648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463615645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 977fb6cf62981d14b8cea4b170864b4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  table: {fileID: 1463615646}
+  tableNavigator: {fileID: 1463615649}
+  switchAnimationTime: 0.666
+--- !u!114 &1463615649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463615645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6e9a5292fdd08f45a1fe151fd0d6059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  table: {fileID: 1463615646}
+--- !u!114 &1463615650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463615645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ab5e64040513584b8a1a4744b5b44e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  table: {fileID: 1463615646}
+  tableNavigator: {fileID: 1463615649}
+--- !u!114 &1463615651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463615645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 212680aae55415544b599f73a2337903, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  table: {fileID: 1463615646}
+  tableNavigator: {fileID: 1463615649}
+  tableMatcher: {fileID: 1463615650}
+  tileFactory:
+    poolController: {fileID: 1846186461}
+    tilePrefab: {fileID: 1814703554095226747, guid: 5153bf819a0403343b6ada66ce0fd3d4, type: 3}
+    gemTypeList: []
+  gemTypeSourceArray:
+  - {fileID: 1270056864}
+  - {fileID: 1192575259}
+  - {fileID: 553755914}
+  - {fileID: 964437311}
+  - {fileID: 164168745}
 --- !u!1 &1846186459
 GameObject:
   m_ObjectHideFlags: 0

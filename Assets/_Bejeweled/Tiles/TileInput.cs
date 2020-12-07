@@ -12,7 +12,8 @@ namespace Bejeweled
         [SerializeField]
         Tile tile;
 
-        Table table;        
+        Table table;
+        TableNavigator tableNavigator;
 
         Vector2 beginDragPosition;
         bool dragged;
@@ -36,18 +37,18 @@ namespace Bejeweled
 
             if (dragDelta.magnitude > DRAG_DISTANCE_THRESHOLD)
             {
-                Table.TileDirection dragDirection;
+                TileDirection dragDirection;
 
                 if(Mathf.Abs(dragDelta.x) > Mathf.Abs(dragDelta.y))
                 {
-                    dragDirection = Mathf.Sign(dragDelta.x) > 0 ? Table.TileDirection.Right : Table.TileDirection.Left;
+                    dragDirection = Mathf.Sign(dragDelta.x) > 0 ? TileDirection.Right : TileDirection.Left;
                 }
                 else
                 {
-                    dragDirection = Mathf.Sign(dragDelta.y) > 0 ? Table.TileDirection.Up : Table.TileDirection.Down;
+                    dragDirection = Mathf.Sign(dragDelta.y) > 0 ? TileDirection.Up : TileDirection.Down;
                 }
 
-                Tile otherTile = table.FindTileInDirection(tile.Position, dragDirection);
+                Tile otherTile = tableNavigator.FindTileInDirection(tile.Position, dragDirection);
 
                 if (otherTile == null)
                 {
@@ -85,7 +86,7 @@ namespace Bejeweled
             }
         }
 
-        public void Initialize(Table table)
+        public void Initialize(Table table, TableNavigator tableNavigator)
         {
             this.table = table;
         }

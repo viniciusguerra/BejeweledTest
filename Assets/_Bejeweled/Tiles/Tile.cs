@@ -18,6 +18,7 @@ namespace Bejeweled
         private TileInput tileInput;
 
         private Table table;
+        private TableNavigator tableNavigator;
 
         private Vector2Int previousPosition;
         public Vector2Int PreviousPosition
@@ -35,7 +36,7 @@ namespace Bejeweled
 
                 this.position = value;
 
-                transform.position = table.TableSpaceToWorldSpace(position);
+                transform.position = tableNavigator.TableSpaceToWorldSpace(position);
 
                 gameObject.name = $"{TILE_NAME}{position.ToString()}";
             }
@@ -65,7 +66,7 @@ namespace Bejeweled
         {
             get
             {
-                foreach (var neighbourTile in table.NeighbourTiles(this))
+                foreach (var neighbourTile in tableNavigator.FindNeighbouringTiles(this))
                 {
                     if (neighbourTile.IsSelected)
                         return neighbourTile;
@@ -101,12 +102,13 @@ namespace Bejeweled
             }
         }
 
-        private void Create(Table table, Vector2Int position, List<TileType> possibleTypeList)
+        private void Create(Table table, TableNavigator tableNavigator, Vector2Int position, List<TileType> possibleTypeList)
         {
             this.table = table;
+            this.tableNavigator = tableNavigator;
             this.Position = position;
 
-            this.tileInput.Initialize(table);
+            this.tileInput.Initialize(table, tableNavigator);
 
             this.table.OnTileSelected += OnTileSelected;
 
@@ -162,12 +164,12 @@ namespace Bejeweled
             /// </summary>
             /// <param name="excludedTypes">Excluded types of tile which would match 3 if set on the Table</param>
             /// <returns>A random Tile</returns>
-            public Tile CreateTile(Table table, Vector2Int position, List<TileType> possibleTypes)
+            public Tile CreateTile(Table table, TableNavigator tableNavigator, Vector2Int position, List<TileType> possibleTypes)
             {
                 var tileGameObject = Instantiate(tilePrefab, table.transform, false);
                 var tile = tileGameObject.GetComponent<Tile>();
 
-                tile.Create(table, position, possibleTypes);
+                tile.Create(table, tableNavigator, position, possibleTypes);
 
                 return tile;
             }
