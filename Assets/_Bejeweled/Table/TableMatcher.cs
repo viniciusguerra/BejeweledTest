@@ -22,7 +22,17 @@ namespace Bejeweled
         private int _matchingTypeIndex;
         private Tile _tileA, _tileB;
 
-        public bool FindMatchInRow(Tile rowTile, TileDirection direction, out Tile[] matchingTiles)
+        public bool CheckForMatches(Tile tileA, Tile tileB, out Tile[] matchingTiles)
+        {
+            return FindMatchesInPosition(tileA, out matchingTiles) || FindMatchesInPosition(tileB, out matchingTiles);
+        }
+
+        public bool FindMatchesInPosition(Tile tile, out Tile[] matchingTiles)
+        {
+            return FindMatchInRow(tile, TileDirection.Horizontal, out matchingTiles) || FindMatchInRow(tile, TileDirection.Vertical, out matchingTiles);
+        }
+
+        private bool FindMatchInRow(Tile rowTile, TileDirection direction, out Tile[] matchingTiles)
         {
             int consecutive = 0;
             bool match = false;

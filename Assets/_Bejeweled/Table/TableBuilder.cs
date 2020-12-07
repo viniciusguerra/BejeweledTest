@@ -21,9 +21,9 @@ namespace Bejeweled
         [SerializeField]
         private Pool[] gemTypeSourceArray;        
 
-        public Tile[,] BuildTiles()
+        public void BuildTileMatrix()
         {
-            var tileMatrix = new Tile[table.Rows, table.Rows];
+            table.TileMatrix = new Tile[table.Rows, table.Rows];
 
             string[] gemTypeNames = Array.ConvertAll(gemTypeSourceArray, (x) => { return x.Id; });
 
@@ -37,6 +37,8 @@ namespace Bejeweled
             {
                 for (int j = 0; j < table.Rows; j++)
                 {
+                    _tileTypeList.Clear();
+
                     // find matching types to the left
                     _type = tableMatcher.FindMatchingTypeInDirection(new Vector2Int(i, j), TileDirection.Left);
 
@@ -53,11 +55,9 @@ namespace Bejeweled
 
                     _tile = tileFactory.CreateTile(table, tableNavigator, new Vector2Int(i, j), _tileTypeList);
 
-                    tileMatrix[i, j] = _tile;
+                    table.TileMatrix[i, j] = _tile;
                 }
             }
-
-            return tileMatrix;
         }
 
         public List<TileType> FindDifferentTypesThan(List<TileType> unwantedTileTypeList)

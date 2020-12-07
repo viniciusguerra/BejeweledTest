@@ -89,6 +89,7 @@ namespace Bejeweled
         public void Initialize(Table table, TableNavigator tableNavigator)
         {
             this.table = table;
+            this.tableNavigator = tableNavigator;
         }
     }
 }

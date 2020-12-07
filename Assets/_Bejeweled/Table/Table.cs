@@ -32,15 +32,12 @@ namespace Bejeweled
             get => tileDistance;
         }
 
-        private Tile[,] tileMatrix;
-        public Tile[,] TileMatrix
-        {
-            get => tileMatrix;
-        }       
+        public Tile[,] TileMatrix;
 
         public event EventHandler<TileSelectedArgs> OnTileSelected;
 
         Tile _tile, _tileA, _tileB;
+        Tile[] _matchingTiles;
         List<TileType> _tileTypeList = new List<TileType>();
 
         public void SelectedTile(Tile tile)
@@ -68,45 +65,23 @@ namespace Bejeweled
                 new Vector2Int[] { otherTilePosition, selectedPosition }
             );
 
-            Tile[] matchingTiles;
+            bool matchedAnyTime = false;
+            bool matched;
 
-            TileDirection switchDirection = tileA.Position.x != tileB.Position.x ? TileDirection.Horizontal : TileDirection.Vertical;
-
-            bool matchedHorizontal = tableMatcher.FindMatchInRow(tileA, TileDirection.Horizontal, out matchingTiles);
-
-            if (matchedHorizontal)
+            do
             {
-                yield return ClearTiles(matchingTiles, TileDirection.Horizontal);
-            }
+                matched = tableMatcher.CheckForMatches(tileA, tileB, out _matchingTiles);
 
-            if (switchDirection == TileDirection.Vertical)
-            {
-                if (tableMatcher.FindMatchInRow(tileB, TileDirection.Horizontal, out matchingTiles))
+                matchedAnyTime |= matched;
+
+                if (matched)
                 {
-                    matchedHorizontal = true;
-
-                    yield return ClearTiles(matchingTiles, TileDirection.Horizontal);
+                    yield return ClearTiles(_matchingTiles);
                 }
-            }
 
-            bool matchedVertical = tableMatcher.FindMatchInRow(tileA, TileDirection.Vertical, out matchingTiles);
+            } while (matched);
 
-            if (matchedVertical)
-            {
-                yield return ClearTiles(matchingTiles, TileDirection.Vertical);
-            }
-
-            if (switchDirection == TileDirection.Vertical)
-            {
-                if (tableMatcher.FindMatchInRow(tileB, TileDirection.Vertical, out matchingTiles))
-                {
-                    matchedVertical = true;
-
-                    yield return ClearTiles(matchingTiles, TileDirection.Vertical);
-                }
-            }
-
-            if (!(matchedHorizontal || matchedVertical))
+            if (!matchedAnyTime)
             {
                 // return tiles to previous positions if there is no match
                 yield return tableAnimator.AnimateTiles(
@@ -150,18 +125,18 @@ namespace Bejeweled
 
         public void SwitchTiles(Vector2Int positionA, Vector2Int positionB)
         {
-            _tileA = tileMatrix[positionA.x, positionA.y];
-            _tileB = tileMatrix[positionB.x, positionB.y];
+            _tileA = TileMatrix[positionA.x, positionA.y];
+            _tileB = TileMatrix[positionB.x, positionB.y];
 
-            tileMatrix[positionA.x, positionA.y] = _tileB;
-            tileMatrix[positionB.x, positionB.y] = _tileA;
+            TileMatrix[positionA.x, positionA.y] = _tileB;
+            TileMatrix[positionB.x, positionB.y] = _tileA;
         }
 
-        public IEnumerator ClearTiles(Tile[] tileArray, TileDirection direction)
+        public IEnumerator ClearTiles(Tile[] clearedTiles)
         {
             List<Vector2Int> positionList = new List<Vector2Int>();
 
-            foreach (var tile in tileArray)
+            foreach (var tile in clearedTiles)
             {
                 positionList.Add(tile.Position);
             }
@@ -169,21 +144,23 @@ namespace Bejeweled
             List<Tile> tileToDropList = new List<Tile>();
             List<Vector2Int> targetPositionList = new List<Vector2Int>();
 
+            TileDirection direction = positionList[0].x == positionList[1].x ? TileDirection.Vertical : TileDirection.Horizontal;
+
             // drop tiles in all x columns
             if (direction == TileDirection.Horizontal)
             {
-                DropTilesInRow(positionList, tileToDropList, targetPositionList);
+                FindTilesToDropInRow(positionList, tileToDropList, targetPositionList);
             }
             // find lowest tile and drop in one column to its position
             else
             {
-                DropTilesInColumn(tileArray, tileToDropList, targetPositionList);
+                FindTilesToDropInColumn(clearedTiles, tileToDropList, targetPositionList);
             }
 
             yield return tableAnimator.AnimateTiles(tileToDropList.ToArray(), targetPositionList.ToArray());
         }
 
-        private void DropTilesInColumn(Tile[] clearedTileArray, List<Tile> tilesToAnimateList, List<Vector2Int> targetPositionList)
+        private void FindTilesToDropInColumn(Tile[] clearedTileArray, List<Tile> tilesToAnimateList, List<Vector2Int> targetPositionList)
         {
             Tile highestTile = null;
             Tile lowestTile = null;
@@ -229,11 +206,11 @@ namespace Bejeweled
             }
         }
 
-        private void DropTilesInRow(List<Vector2Int> positionList, List<Tile> tileToDropList, List<Vector2Int> targetPositionList)
+        private void FindTilesToDropInRow(List<Vector2Int> positionList, List<Tile> tileToDropList, List<Vector2Int> targetPositionList)
         {
             foreach (var position in positionList)
             {
-                _tile = tileMatrix[position.x, position.y];
+                _tile = TileMatrix[position.x, position.y];
 
                 tableNavigator.FindTileColumnOverPosition(position, position, tileToDropList, targetPositionList);
 
@@ -246,7 +223,7 @@ namespace Bejeweled
         #region MonoBehavior
         private void Start()
         {
-            tableBuilder.BuildTiles();
+            tableBuilder.BuildTileMatrix();
         }
         #endregion
 

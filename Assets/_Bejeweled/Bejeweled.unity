@@ -486,7 +486,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   table: {fileID: 1463615646}
   tableNavigator: {fileID: 1463615649}
-  switchAnimationTime: 0.666
+  switchAnimationTime: 0.2
 --- !u!114 &1463615649
 MonoBehaviour:
   m_ObjectHideFlags: 0
