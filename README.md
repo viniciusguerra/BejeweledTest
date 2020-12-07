@@ -19,7 +19,7 @@ novas peças surgirão do topo do tabuleiro preenchendo o lugar das anteriores: 
 
 Na raíz do projeto encontramos o diretório `_Bejeweled` onde estão todos os arquivos desenvolvidos e o diretório `Animated Match 3 Gems + Hue Shift Sprites Shaders` onde se encontram os gráficos baixados na Asset Store [neste link](https://assetstore.unity.com/packages/2d/environments/animated-match-3-gems-hue-shift-sprites-shaders-62804).
 
-No diretório `_Bejeweled` encontramos a cena de jogo `Bejeweled.unity` e os três diretórios contendo as features principais do teste, `Pooling`, `Score`, `Selection`, `Table`, `Tiles` e `UI`.
+No diretório `_Bejeweled` encontramos a cena de jogo `Bejeweled.unity` e os três diretórios contendo as features principais do teste, `Pooling`, `Score`, `Table`, `Tiles` e `UI`.
 
 ### Pooling
 
@@ -38,7 +38,7 @@ A classe responsável por uma visão geral do quadro de gemas. Ela contém a mat
 * Comparação de gemas pelo componente TableMatcher
 * Animação das peças pelo componente TableTileAnimator
 
-### Tile
+### Tiles
 
 A classe Tile é composta das seguintes responsabilidades: 
 * Recebe interação do jogador através do componente TileInput
